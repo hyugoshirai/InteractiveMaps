@@ -1,9 +1,22 @@
-library(shiny)
-library(leaflet)
-library(tidyverse)
-library(reactlog)
-library(svglite)
-library(shinyWidgets)
+# List of required packages
+packages <- c(
+  "shiny",
+  "leaflet",
+  "tidyverse",
+  "reactlog",
+  "svglite",
+  "shiny",
+  "shinyWidgets",
+)
+
+# Install packages if they are not already installed
+install_packages <- packages[!packages %in% installed.packages()]
+if (length(install_packages) > 0) {
+  install.packages(install_packages)
+}
+
+# Load packages
+invisible(lapply(packages, library, character.only = TRUE))
 
 reactlog_enable()
 

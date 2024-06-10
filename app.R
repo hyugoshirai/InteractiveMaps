@@ -25,7 +25,7 @@ ui <- bootstrapPage(
                                  width = "100%",
                                  options = list(
                                    create = FALSE,
-                                   placeholder = "",
+                                   placeholder = "Anaconda",
                                    maxItems = '1',
                                    onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}"),
                                    onType = I("function (str) {if (str === \"\") {this.close();}}"))),
@@ -82,23 +82,31 @@ server <- function(input, output, session) {
   })
 
   # sci_name_choices <- reactive({
-  #   base <- sci_names %>% select(scientificNameshort) %>% unlist()
-  #   names(base) <- base
-    # Function to create reactive choices
-    sci_name_choices <- reactive({
-      base <- df_sites %>% select(species_list) %>% unlist()
-      names(base) <- base
+  #    base <- sci_names %>% select(scientificNameshort) %>% unlist()
+  #    names(base) <- base
+     # Function to create reactive choices
+
   
-    if(is.null(input$sci_name) | input$sci_name == ""){
+  updateSelectizeInput(session, "sci_name", server = TRUE, choices = sci_name_choices())
+  
+  # Define function to compute choices
+  sci_name_choices <- function() {
+    base <- df_sites %>% select(species_list) %>% unlist()
+    names(base) <- base
+    
+    if (is.null(input$sci_name) || length(input$sci_name) == 0 || input$sci_name == "") {
       return(base)
     }
-    base[str_detect(base,input$sci_name)]
-  })
-
-  isolate({
-    updateSelectizeInput(session,"sci_name",server = TRUE,choices = sci_name_choices())
-  })
-
+    
+    pattern <- as.character(input$sci_name)
+    
+    if (is.null(pattern) || pattern == "") {
+      return(base)
+    }
+    
+    base[str_detect(base, pattern)]
+  }
+  
   output$species_list_text <- renderUI({ 
     if(!is.null(input$map_marker_click)){
       marker_data <- str_split(input$map_marker_click,"_",simplify=TRUE)[1,] # Now the input is a marker and the event is a 'click'
@@ -131,13 +139,20 @@ server <- function(input, output, session) {
       dplyr::filter(sight_date > input$day_month[1],
                     sight_date < input$day_month[2])
 
-    if(!is.null(input$sci_name) & input$sci_name != ""){
-      print(input$sci_name)
-      return(base %>%
-               filter(str_detect(species_list,input$sci_name)))
-    }else{
-      return(base)
+    # if (is.null(input$sci_name) || length(input$sci_name) == 0 || input$sci_name == "") {
+    #   print(input$sci_name)
+    #   return(base %>%
+    #            filter(str_detect(species_list,input$sci_name)))
+    # }else{
+    #   return(base)
+    # }
+    if (!is.null(input$sci_name) && length(input$sci_name) > 0 && input$sci_name != "") {
+      pattern <- as.character(input$sci_name)
+      base <- base %>%
+        filter(str_detect(species_list, pattern))
     }
+    
+    return(base)
   })
 
   count_palet <- colorBin(palette = "Dark2",bins = 3, pretty=TRUE, # bins define how many equal classes the counting will be 

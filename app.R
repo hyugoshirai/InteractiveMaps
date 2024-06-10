@@ -8,7 +8,7 @@ library(shinyWidgets)
 reactlog_enable()
 
 # Sample Data
-df_sites <- read.csv("data.csv", TRUE, sep = ",")
+df_sites <- read.csv("https://raw.githubusercontent.com/hyugoshirai/InteractiveMaps/main/data.csv", TRUE, sep = ",")
 species_choices <- df_sites %>% select(species_list) %>% unlist() %>% unique()
 
 ui <- bootstrapPage(

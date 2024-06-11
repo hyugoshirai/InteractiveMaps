@@ -1,24 +1,14 @@
-# List of required packages
-packages <- c(
-  "shiny",
-  "leaflet",
-  "tidyverse",
-  "reactlog",
-  "svglite",
-  "shiny",
-  "shinyWidgets"
-)
+# Define package dependencies
+packages <- c("shiny", "leaflet", "tidyverse", "reactlog", "svglite", "shinyWidgets")
 
 # Install packages if they are not already installed
-install_packages <- packages[!packages %in% installed.packages()]
-if (length(install_packages) > 0) {
-  install.packages(install_packages)
-}
+try(install.packages(packages[!packages %in% installed.packages()]))
 
 # Load packages
-invisible(lapply(packages, library, character.only = TRUE))
+try(invisible(lapply(packages, library, character.only = TRUE)))
 
-reactlog_enable()
+# Enable reactlog
+try(reactlog_enable())
 
 # Sample Data
 df_sites <- read.csv("https://raw.githubusercontent.com/hyugoshirai/InteractiveMaps/main/data.csv", TRUE, sep = ",")
@@ -112,9 +102,10 @@ server <- function(input, output, session) {
     
     # Create histogram of individuals counts over time
     ggplot(df, aes(x = sight_date, y = species_count)) +
-      geom_histogram(stat = "identity", fill = "blue") +
+      geom_bar(stat = "identity", fill = "blue") +  # Use geom_bar instead of geom_histogram
       labs(x = "Date", y = "Sum of Species Counts", title = "Species Counts Over Time") +
       theme_minimal()
+    
   })
   
   
@@ -205,7 +196,6 @@ server <- function(input, output, session) {
       )
   })
 }
-
 
 
 # Run the application

@@ -6,7 +6,11 @@ packages <- c(
   "reactlog",
   "svglite",
   "shiny",
+<<<<<<< HEAD
   "shinyWidgets"
+=======
+  "shinyWidgets",
+>>>>>>> f1eba017ba6cc7eb4838854253a766077245104b
 )
 
 # Install packages if they are not already installed

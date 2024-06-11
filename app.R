@@ -6,11 +6,7 @@ packages <- c(
   "reactlog",
   "svglite",
   "shiny",
-<<<<<<< HEAD
   "shinyWidgets"
-=======
-  "shinyWidgets",
->>>>>>> f1eba017ba6cc7eb4838854253a766077245104b
 )
 
 # Install packages if they are not already installed
@@ -91,7 +87,7 @@ server <- function(input, output, session) {
   output$species_in_area <- gt::render_gt({
     df <- df_bounds()  # Initially get the data within bounds
     df <- df_date_spp() # Get the data within time range
-
+    
     # Perform data transformations and create visualization
     df %>%
       select(species_list) %>%
@@ -121,7 +117,7 @@ server <- function(input, output, session) {
       theme_minimal()
   })
   
-
+  
   # Render the leaflet map
   output$map <- renderLeaflet({
     leaflet(options = leafletOptions(preferCanvas = TRUE)) %>%

@@ -1,6 +1,21 @@
 # Define package dependencies
 packages <- c("shiny", "leaflet", "tidyverse", "reactlog", "svglite", "shinyWidgets")
 
+if (!require(shinyWidgets)) {
+  install.packages('shinyWidgets', dependencies = TRUE)
+  library(shinyWidgets)
+}
+
+if (!require(tidyverse)) {
+  install.packages('tidyverse', dependencies = TRUE)
+  library(tidyverse)
+}
+
+if (!require(svglite)) {
+  install.packages('svglite', dependencies = TRUE)
+  library(svglite)
+}
+
 # Install packages if they are not already installed
 try(install.packages(packages[!packages %in% installed.packages()]))
 
